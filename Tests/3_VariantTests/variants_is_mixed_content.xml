@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<dictionary xmlns="urn:Simple-Dictionary-Mono">
+    <entry>
+        <!-- abridged from Students Dictionary -->
+        <headwords>
+            <headword>
+                <word>ad-</word>
+                <variants>
+                changing to 
+                <variant>ac-</variant>,
+                <variant>af-</variant>,
+                <variant>ag-</variant>,
+                <variant>al-</variant>,
+                <variant>an-</variant>,
+                <variant>ap-</variant>,
+                <variant>ar-</variant>,
+                <variant>as-</variant>,
+                <variant>at-</variant>
+                before certain consonants
+                </variants>
+            </headword>
+        </headwords>
+        <partofspeech posType="noun" />  
+    </entry>
+</dictionary>

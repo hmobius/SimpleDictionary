@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<dictionary xmlns="urn:Simple-Dictionary-Mono">
+    <entry>
+        <headwords>
+            <headword>
+                <word>test</word>
+                <variants>
+                    <variant>tester</variant>
+                </variants>            
+            </headword>
+        </headwords>
+        <partofspeech posType="noun">
+            <inflections>
+                <inflection>tests</inflection>
+            </inflections>        
+            <pronunciations>
+                <pronunciation pronType="rhymes">rhymes with best</pronunciation>
+            </pronunciations>            
+            <senses>
+                <sense>
+                    <definition>definition</definition>
+                    <example>
+                        <text>more text</text>
+                    </example>
+                    <reference>
+                        <text>Text</text>
+                        <work>Work title</work>
+                        <author>Author name</author>
+                    </reference>                    
+                </sense>
+            </senses>
+        </partofspeech>
+        <images>
+            <image filename="image.jpg" />
+        </images>        
+    </entry>
+</dictionary>

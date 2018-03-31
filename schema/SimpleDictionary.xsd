@@ -1,0 +1,301 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:Simple-Dictionary-Mono"
+    xmlns="urn:Simple-Dictionary-Mono"
+    elementFormDefault="qualified">
+
+<xs:element name="dictionary">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element name="entry" type="entryType" minOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="title" type="nonEmptyString" />
+    </xs:complexType>
+</xs:element>
+
+  <xs:annotation>
+    <xs:documentation>
+    =================== Entry Section ====================================
+    </xs:documentation>
+  </xs:annotation>
+
+    <xs:complexType name="entryType">
+        <xs:sequence>
+            <xs:element name="headwords" type="headwordGroupType" minOccurs="1" maxOccurs="1" />
+            <xs:element name="partofspeech" type="partofSpeechType" minOccurs="1" maxOccurs="5" />
+            <xs:element name="images" type="imageGroupType" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="suppressed" type="xs:boolean" default="false" />
+    </xs:complexType>
+
+  <xs:annotation>
+    <xs:documentation>
+    =================== Headwords Section ====================================
+    </xs:documentation>
+  </xs:annotation>
+    
+    <xs:complexType name="headwordGroupType">
+        <xs:sequence>
+            <xs:element name="headword" type="headwordType" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="headwordType">
+        <xs:sequence>
+            <!-- Max 3 headword words per entry. -->
+            <xs:element name="word" type="nonEmptyString" minOccurs="1" maxOccurs="3" />
+            <xs:element name="variants" type="variantGroupType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="homograph" type="xs:positiveInteger" default="1" />
+    </xs:complexType>
+
+    <xs:complexType name="variantGroupType" mixed="true">
+        <xs:sequence>
+            <!-- Max 10 variants. Covers ad- in students dictionary -->
+            <xs:element name="variant" type="nonEmptyString" minOccurs="1" maxOccurs="10" />
+        </xs:sequence>
+    </xs:complexType>
+
+  <xs:annotation>
+    <xs:documentation>
+    =================== Parts of Speech Section ====================================
+    </xs:documentation>
+  </xs:annotation>
+
+    <xs:complexType name="partofSpeechType">
+        <xs:sequence>
+            <xs:element name="inflections" type="inflectionGroupType" minOccurs="0" />
+            <xs:element name="pronunciations" type="pronunciationGroupType" minOccurs="0" />
+            <xs:element name="senses" type="senseGroupType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="posType" type="posTypeEnum" use="required" />
+        <xs:attribute name="posQualifier" type="posQualifierEnum" />
+    </xs:complexType>
+
+    <!-- NB If you add another enum value, change the mxOccurs for <partofSpeech> element in entryType -->
+    <xs:simpleType name="posTypeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="noun" />
+            <xs:enumeration value="verb" />
+            <xs:enumeration value="adjective" />
+            <xs:enumeration value="adverb" />
+            <xs:enumeration value="determiner" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="posQualifierEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="plural" />
+            <xs:enumeration value="proper" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Arbitrary number of inflections in a group. Needs to be a good reason why more than ten -->
+    <xs:complexType name="inflectionGroupType">
+        <xs:sequence>
+            <xs:element name="inflection"  minOccurs="1" maxOccurs="10">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="nonEmptyString">
+                            <xs:attribute name="infType">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="plural" />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+  <xs:annotation>
+    <xs:documentation>
+    =================== Pronunciations Section ====================================
+    </xs:documentation>
+  </xs:annotation>    
+
+    <!-- Arbitrary number of pronunciations in a group. -->
+    <xs:complexType name="pronunciationGroupType">
+        <xs:sequence>
+            <xs:element name="pronunciation" type="pronunicationType" minOccurs="1" maxOccurs="5" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="pronunicationType" mixed="true">
+        <xs:sequence>
+            <!-- Don't need to specify maxOccurs as stress is within a mixed content element -->
+            <xs:element name="stress" type="nonEmptyString" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="pronType" type="pronunciationEnum" use="required" />
+    </xs:complexType>
+
+    <xs:simpleType name="pronunciationEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="rhymes" />
+            <xs:enumeration value="respell" />
+            <xs:enumeration value="ipa" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+  <xs:annotation>
+    <xs:documentation>
+    =================== Senses Section ====================================
+    </xs:documentation>
+  </xs:annotation>
+
+    <xs:complexType name="senseGroupType">
+        <xs:sequence>
+            <xs:element name="sense" type="senseType" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Again, 5 is an arbitrary upper bound for examples and references. No idea why you would need more than 5 for a single sense of a word -->
+    <xs:complexType name="senseType">
+        <xs:sequence>
+            <xs:element name="definition" type="formattedTextWithCrossRefs" minOccurs="1" />
+            <xs:element name="example" type="definitionExampleType" minOccurs="0" maxOccurs="5" />
+            <xs:element name="reference" type="definitionReferenceType" minOccurs="0" maxOccurs="5" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="definitionExampleType">
+        <xs:sequence>
+            <xs:element name="text" type="formattedText" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="definitionReferenceType">
+        <xs:sequence>
+            <xs:element name="text" type="formattedText" minOccurs="1" maxOccurs="1" />
+            <xs:element name="work" type="nonEmptyString" minOccurs="1" maxOccurs="1" />
+            <xs:element name="author" type="nonEmptyString" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+
+<!-- etymology section -->
+
+<!-- derivatives section -->
+
+<!-- phrases section -->
+
+<!-- features section -->
+
+  <xs:annotation>
+    <xs:documentation>
+    =================== Images Section ====================================
+    </xs:documentation>
+  </xs:annotation>
+
+    <!-- Arbitrary number of images in a group set to 5 -->
+    <xs:complexType name="imageGroupType">
+        <xs:sequence>
+            <xs:element name="image" minOccurs="1" maxOccurs="5">
+                <xs:complexType>
+                    <xs:attribute name="filename" use="required" type="nonEmptyString"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+  <xs:annotation>
+    <xs:documentation>
+    =================== Cross Reference Section ====================================
+    </xs:documentation>
+  </xs:annotation>
+
+    <xs:element name="crossReferences" type="crossReferenceGroupType" />
+
+    <!-- Arbitrary number of cross refs in a group set to 5 -->
+    <xs:complexType name="crossReferenceGroupType" mixed="true">
+        <xs:sequence>
+            <xs:element name="crossReference" minOccurs="1" maxOccurs="5">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="nonEmptyString">
+                            <xs:attribute name="blockID" type="nonEmptyString" use="required" />
+                            <xs:attribute name="homograph" type="xs:positiveInteger" default="1"  />
+                            <xs:attribute name="targetID" type="nonEmptyString" />
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>            
+        </xs:sequence>
+    </xs:complexType>
+
+  <xs:annotation>
+    <xs:documentation>
+    =================== Utility Section ====================================
+    </xs:documentation>
+  </xs:annotation>
+
+    <xs:simpleType name="nonEmptyString">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:pattern value="\S(.*\S)?" />
+        </xs:restriction>
+    </xs:simpleType>
+
+
+  <xs:annotation>
+    <xs:documentation>
+    =================== Taken from HTML Section ====================================
+    </xs:documentation>
+  </xs:annotation>    
+
+  <xs:group name="phrase.basic">
+    <xs:choice>
+      <xs:element ref="em"/>
+      <xs:element ref="strong"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:group name="phrase">
+    <xs:choice>
+      <xs:group ref="phrase.basic"/>
+    </xs:choice>
+  </xs:group>  
+
+  <xs:group name="inline">
+    <xs:choice>
+      <xs:group ref="phrase"/>
+    </xs:choice>
+  </xs:group>  
+
+  <xs:complexType name="formattedText" mixed="true">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="inline"/>
+    </xs:choice>
+  </xs:complexType>  
+
+    <xs:complexType name="formattedTextWithCrossRefs" mixed="true">
+        <xs:complexContent>
+            <xs:extension base="formattedText">
+                <xs:choice minOccurs="0" maxOccurs="1">
+                    <xs:element ref="crossReferences" />                    
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>  
+
+
+  <xs:element name="em">
+    <xs:complexType mixed="true">
+      <xs:complexContent>
+        <xs:extension base="formattedText" />
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="strong">
+    <xs:complexType mixed="true">
+      <xs:complexContent>
+        <xs:extension base="formattedText" />
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

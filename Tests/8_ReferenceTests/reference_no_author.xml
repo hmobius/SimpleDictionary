@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<dictionary xmlns="urn:Simple-Dictionary-Mono">
+    <entry>
+        <headwords>
+            <headword>
+                <word>test</word>
+            </headword>
+        </headwords>
+        <partofspeech posType="noun">
+            <senses>
+                <sense>
+                    <definition>definition</definition>
+                    <reference>
+                        <text>Text</text>
+                        <work>Work title</work>
+                    </reference>                    
+                </sense>
+            </senses>
+        </partofspeech>
+    </entry>
+</dictionary>

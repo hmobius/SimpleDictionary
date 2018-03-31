@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<dictionary xmlns="urn:Simple-Dictionary-Mono">
+    <entry>
+        <headwords>
+            <headword>
+                <word>test</word>
+            </headword>
+        </headwords>
+        <partofspeech posType="noun">
+            <pronunciations>
+                <pronunciation pronType="ipa">   </pronunciation>
+            </pronunciations>
+        </partofspeech>
+    </entry>
+</dictionary>
